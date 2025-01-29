@@ -6,11 +6,15 @@ import { z } from 'zod'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from 'react-hook-form'
 import { Card } from '@/components/ui/card'
-import { Link } from 'react-router-dom'
-import { RouteSignUp } from '@/helpers/RouteName'
+import { Link, useNavigate } from 'react-router-dom'
+import { RouteIndex, RouteSignUp } from '@/helpers/RouteName'
+import { showToast } from '@/helpers/showToast'
+import { getEnv } from '@/helpers/getEnv'
+
 
 
 const SignIn = () => {
+    const navigate = useNavigate();
 
     const formSchema = z.object({
         email: z.string().email(),
@@ -25,10 +29,28 @@ const SignIn = () => {
         },
     })
 
-    function onSubmit(values) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
+    async function onSubmit(values) {
+        try {
+            const response = await fetch(`${getEnv('VITE_API_BASE_URL')}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify(values)
+            })
+            const data = await response.json()
+            if (!response.ok) {
+                //toastify
+                showToast('error', data.message)
+            }
+
+            navigate(RouteIndex)
+            showToast('success', data.message)
+        }
+        catch (err) {
+            showToast('error', err.message)
+        }
     }
 
     return (
@@ -60,20 +82,20 @@ const SignIn = () => {
                                     <FormItem>
                                         <FormLabel>Password</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Enter your secret " {...field} />
+                                            <Input type="password" placeholder="Enter your secret " {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
                         </div>
-                        <div mt-5>  
+                        <div mt-5>
                             <Button type="submit" className="w-full">Sign In</Button>
                             <div className='mt-5 text-sm flex justify-center gap-2'>
                                 <p>Don't have an account?</p>
                                 <Link to={RouteSignUp} className='text-blue-500 hover:underline'>Sign Up</Link>
                             </div>
-                        </div>                      
+                        </div>
                     </form>
                 </Form>
             </Card>
