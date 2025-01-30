@@ -42,7 +42,7 @@ const SignIn = () => {
             const data = await response.json()
             if (!response.ok) {
                 //toastify
-                showToast('error', data.message)
+                return showToast('error', data.message)
             }
 
             navigate(RouteIndex)
