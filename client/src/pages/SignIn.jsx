@@ -10,10 +10,15 @@ import { Link, useNavigate } from 'react-router-dom'
 import { RouteIndex, RouteSignUp } from '@/helpers/RouteName'
 import { showToast } from '@/helpers/showToast'
 import { getEnv } from '@/helpers/getEnv'
+import { useDispatch } from 'react-redux'
+import { setUser } from '@/redux/user/user.slice'
+import GoogleLogin from '@/components/GoogleLogin'
 
 
 
 const SignIn = () => {
+
+    const dispatch = useDispatch()
     const navigate = useNavigate();
 
     const formSchema = z.object({
@@ -44,7 +49,7 @@ const SignIn = () => {
                 //toastify
                 return showToast('error', data.message)
             }
-
+            dispatch(setUser(data.user))
             navigate(RouteIndex)
             showToast('success', data.message)
         }
@@ -57,6 +62,14 @@ const SignIn = () => {
         <div className='flex justify-center items-center h-screen w-screen'>
             <Card className='w-[400px] p-5'>
                 <h1 className='text-2xl font-bold mb-5 text-center' >Sign into your Account</h1>
+                <div>
+                    <GoogleLogin />
+                    <div className='border-2 my-5 flex justify-center items-center border-gray-400 relative'>
+                        <span className='absolute bg-white text-sm p-1'>
+                            or
+                        </span>
+                    </div>
+                </div>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <div className='mb-3'>
