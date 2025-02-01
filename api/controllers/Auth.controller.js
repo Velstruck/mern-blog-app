@@ -115,3 +115,25 @@ export const Login = async (req, res, next) => {
     }
 
  }
+ export const Logout = async (req, res, next) => {
+    try {
+        
+
+        // Send token in cookie
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production'? 'none': 'strict',
+            path: '/'
+        });
+
+        res.status(200).json({
+            success: true,
+            message: 'Logout successfull',
+        });
+
+    } catch (error) {
+        next(handleError(500, error.message));
+    }
+
+ }
