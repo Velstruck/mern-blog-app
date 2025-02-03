@@ -29,7 +29,7 @@ const Profile = () => {
         }
     )
 
-    
+
 
     const dispatch = useDispatch()
 
@@ -61,18 +61,6 @@ const Profile = () => {
 
         }
     }, [userData])
-    
-    const handleFileSelection = (files) => {
-        const file = files[0]
-        const preview = URL.createObjectURL(file)
-        setFile(file)
-        setFilePreview(preview)
-    }
-
-
-    if (loading) {
-        return <Loading />
-    }
 
     async function onSubmit(values) {
         try {
@@ -87,16 +75,29 @@ const Profile = () => {
             })
             const data = await response.json()
             if (!response.ok) {
-                //toastify
                 return showToast('error', data.message)
             }
             dispatch(setUser(data.user))
             showToast('success', data.message)
         }
-        catch (err) {
-            showToast('error', err.message)
+        catch (error) {
+            showToast('error', error.message)
         }
     }
+    
+    const handleFileSelection = (files) => {
+        const file = files[0]
+        const preview = URL.createObjectURL(file)
+        setFile(file)
+        setFilePreview(preview)
+    }
+
+
+    if (loading) {
+        return <Loading />
+    }
+
+    
     return (
         <Card className='max-w-screen-md mx-auto'>
 

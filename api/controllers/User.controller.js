@@ -33,7 +33,8 @@ export const updateUser = async (req, res, next) => {
             const hashedPassword = bcryptjs.hashSync(data.password)
             user.password = hashedPassword
         }
-
+        console.log(req.file);
+        
         if (req.file) {
             // Upload an image
             const uploadResult = await cloudinary.uploader
