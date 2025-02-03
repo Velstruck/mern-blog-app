@@ -29,7 +29,7 @@ const Profile = () => {
         }
     )
 
-    console.log(userData);
+    
 
     const dispatch = useDispatch()
 

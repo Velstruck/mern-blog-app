@@ -1,7 +1,7 @@
-import { json } from 'express';
 import { handleError } from '../helpers/handleError.js';
 import User from '../models/user.model.js';
 import bcryptjs from 'bcryptjs';
+import cloudinary from '../config/cloudinary.js'
 export const getUser = async (req, res, next) => {
     try {
         const { userid } = req.params
@@ -28,16 +28,35 @@ export const updateUser = async (req, res, next) => {
         user.name = data.name
         user.email = data.email
         user.bio = data.bio
-        if(data.password && data.password.length > 8){
+
+        if (data.password && data.password.length >= 8) {
             const hashedPassword = bcryptjs.hashSync(data.password)
             user.password = hashedPassword
         }
+
+        if (req.file) {
+            // Upload an image
+            const uploadResult = await cloudinary.uploader
+                .upload(
+                    req.file.path,
+                    { folder: 'mern-blog', resource_type: 'auto' }
+                )
+                .catch((error) => {
+                    next(handleError(500, error.message))
+                });
+
+            user.avatar = uploadResult.secure_url
+        }
+
+        await user.save()
+
+        const newUser = user.toObject({ getters: true })
+        delete newUser.password
         res.status(200).json({
             success: true,
             message: 'Data updated.',
-            user
+            user: newUser
         })
-        
     } catch (error) {
         next(handleError(500, error.message))
     }
