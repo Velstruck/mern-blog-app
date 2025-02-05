@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { RouteAddCategory, RouteEditCategory } from '@/helpers/RouteName'
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   Table,
@@ -17,12 +17,28 @@ import { getEnv } from '@/helpers/getEnv'
 import Loading from '@/components/Loading'
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { deleteData } from '@/helpers/handleDelete'
+import { showToast } from '@/helpers/showToast'
 
 const CategoryDetails = () => {
+  const [refreshData, setRefreshData] = useState(false)
+
   const { data: categoryData, loading, error } = useFetch(`${getEnv('VITE_API_BASE_URL')}/category/all-category`, {
     method: 'GET',
     credentials: 'include',
-  })
+  }, [refreshData])
+
+  const handleDelete = async (id) => {
+    const response =await deleteData(`${getEnv('VITE_API_BASE_URL')}/category/delete/${id}`)
+
+    if(response){
+      setRefreshData(!refreshData)
+      showToast('success', 'Category deleted successfully')
+    }
+    else{
+      showToast('error', 'Failed to delete category')
+    }
+  }
 
   if (loading) return <Loading />
 
@@ -58,7 +74,7 @@ const CategoryDetails = () => {
                           <FaRegEdit />
                         </Link>
                       </Button>
-                      <Button variant="outline" className="hover:bg-violet-500 hover:text-white" size="icon">                       
+                      <Button onClick={()=>handleDelete(category._id)} variant="outline" className="hover:bg-violet-500 hover:text-white" size="icon">                       
                           <RiDeleteBin6Line/>
                       </Button>
                     </TableCell>
