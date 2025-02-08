@@ -28,6 +28,7 @@ const App = () => {
           <Route path={RouteEditCategory()} element={<EditCategories />} />
 
           {/* Blog */}
+          
           <Route path={RouteBlogAdd} element={<AddBlog />} />
           <Route path={RouteBlog} element={<BlogDetails />} />
           <Route path={RouteBlogEdit()} element={<EditBlog />} />
