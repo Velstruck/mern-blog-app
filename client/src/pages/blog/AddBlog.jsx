@@ -19,9 +19,15 @@ import {
 import { useFetch } from '@/hooks/useFetch'
 import Dropzone from 'react-dropzone'
 import { useState } from 'react'
+import Editor from '@/components/Editor'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { RouteBlog } from '@/helpers/RouteName'
 
 
 const AddBlog = () => {
+  const navigate = useNavigate();
+  const user = useSelector(state => state.user)
   const { data: categoryData, loading, error } = useFetch(`${getEnv('VITE_API_BASE_URL')}/category/all-category`, {
     method: 'GET',
     credentials: 'include',
@@ -48,6 +54,13 @@ const AddBlog = () => {
     },
   })
 
+  const handleEditorData = (event, editor) => {
+    const data = editor.getData();
+    form.setValue('blogContent', data);
+
+
+  }
+
   //converting to slug
   const blogTitle = form.watch('title')
   useEffect(() => {
@@ -60,25 +73,35 @@ const AddBlog = () => {
   }, [blogTitle])
 
   async function onSubmit(values) {
-    // try {
-    //   const response = await fetch(`${getEnv('VITE_API_BASE_URL')}/category/add`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(values)
-    //   })
-    //   const data = await response.json()
-    //   if (!response.ok) {
-    //     //toastify
-    //     return showToast('error', data.message)
-    //   }
-    //   form.reset();
-    //   showToast('success', data.message)
-    // }
-    // catch (err) {
-    //   showToast('error', err.message)
-    // }
+
+    try {
+      const newValue = { ...values, author: user.user._id }
+      if (!file) {
+        showToast('error', 'Please select a file')
+      }
+      
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('data', JSON.stringify(newValue))
+
+      const response = await fetch(`${getEnv('VITE_API_BASE_URL')}/blog/add`, {
+        method: 'POST',
+        credentials: 'include',
+        body: formData
+      })
+      const data = await response.json()
+      if (!response.ok) {
+        return showToast('error', data.message)
+      }
+      form.reset()
+      setFile()
+      setFilePreview()
+      navigate(RouteBlog)
+      showToast('success', data.message)
+    }
+    catch (error) {
+      showToast('error', error.message)
+    }
 
   }
   const handleFileSelection = (files) => {
@@ -86,12 +109,11 @@ const AddBlog = () => {
     const preview = URL.createObjectURL(file)
     setFile(file)
     setFilePreview(preview)
-}
+  }
 
   return (
-
-    <div>
-      <Card className="pt-5">
+    <div className="flex justify-center">
+      <Card className="pt-5 w-full max-w-5xl">
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -103,7 +125,7 @@ const AddBlog = () => {
                     <FormItem>
                       <FormLabel>Category</FormLabel>
                       <FormControl>
-                        <Select>
+                        <Select onValueChange={field.onChange} value={field.value}>
                           <SelectTrigger>
                             <SelectValue placeholder="Select" />
                           </SelectTrigger>
@@ -123,7 +145,7 @@ const AddBlog = () => {
               <div className='mb-3'>
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="title"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Title</FormLabel>
@@ -156,12 +178,29 @@ const AddBlog = () => {
                   {({ getRootProps, getInputProps }) => (
                     <div {...getRootProps()}>
                       <input {...getInputProps()} />
-                        <div className='flex justify-center items-center w-36 h-28 border-2 border-dashed rounded hover:border-violet-500 hover:bg-gray-200 cursor-pointer'>
-                          <img src={filePreview} alt="preview" />
-                        </div>
+                      <div className='flex justify-center items-center w-36 h-28 border-2 border-dashed rounded hover:border-violet-500 hover:bg-gray-200 cursor-pointer'>
+                        <img src={filePreview} alt="preview" />
+                      </div>
                     </div>
                   )}
                 </Dropzone>
+              </div>
+              <div className='mb-3'>
+                <FormField
+                  control={form.control}
+                  name="blogContent"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Blog Content</FormLabel>
+                      <FormControl>
+                        <Editor props={{ initialData: '', onChange: handleEditorData }} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+
               </div>
 
               <div className='mt-5'>
@@ -172,7 +211,6 @@ const AddBlog = () => {
         </CardContent>
       </Card>
     </div>
-
   )
 }
 
