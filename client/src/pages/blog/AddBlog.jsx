@@ -16,11 +16,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-
-
+import { useFetch } from '@/hooks/useFetch'
+import Dropzone from 'react-dropzone'
+import { useState } from 'react'
 
 
 const AddBlog = () => {
+  const { data: categoryData, loading, error } = useFetch(`${getEnv('VITE_API_BASE_URL')}/category/all-category`, {
+    method: 'GET',
+    credentials: 'include',
+  }, [])
+
+  const [filePreview, setFilePreview] = useState()
+  const [file, setFile] = useState()
 
   const formSchema = z.object({
     category: z.string().min(3, 'Category must be at least 3 characters long'),
@@ -73,11 +81,17 @@ const AddBlog = () => {
     // }
 
   }
+  const handleFileSelection = (files) => {
+    const file = files[0]
+    const preview = URL.createObjectURL(file)
+    setFile(file)
+    setFilePreview(preview)
+}
 
   return (
 
     <div>
-      <Card className="pt-5 max-w-screen-md mx-auto">
+      <Card className="pt-5">
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -87,16 +101,16 @@ const AddBlog = () => {
                   name="category"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Title</FormLabel>
+                      <FormLabel>Category</FormLabel>
                       <FormControl>
                         <Select>
-                          <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Theme" />
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="light">Light</SelectItem>
-                            <SelectItem value="dark">Dark</SelectItem>
-                            <SelectItem value="system">System</SelectItem>
+                            {categoryData && categoryData.category.length > 0 && categoryData.category.map((category) => (
+                              <SelectItem key={category._id} value={category._id}>{category.name}</SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
 
@@ -135,6 +149,19 @@ const AddBlog = () => {
                     </FormItem>
                   )}
                 />
+              </div>
+              <div className='mb-3'>
+                <span className='block mb-2'>Featured Image</span>
+                <Dropzone onDrop={acceptedFiles => handleFileSelection(acceptedFiles)}>
+                  {({ getRootProps, getInputProps }) => (
+                    <div {...getRootProps()}>
+                      <input {...getInputProps()} />
+                        <div className='flex justify-center items-center w-36 h-28 border-2 border-dashed rounded hover:border-violet-500 hover:bg-gray-200 cursor-pointer'>
+                          <img src={filePreview} alt="preview" />
+                        </div>
+                    </div>
+                  )}
+                </Dropzone>
               </div>
 
               <div className='mt-5'>
