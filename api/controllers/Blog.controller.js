@@ -42,10 +42,19 @@ export const addBlog = async (req, res, next) => {
 }
 export const editBlog = async (req, res, next) => {
     try {
+        const { blogid } = req.params;
 
+        const blog = await Blog.findById(blogid).populate('category', 'name')
+        if (!blog) {
+            next(handleError(404, "Blog not found!"));
+        }
+        return res.status(200).json({
+            blog
+        })
     } catch (error) {
         next(handleError(500, error.message));
     }
+    
 }
 export const updateBlog = async (req, res, next) => {
     try {
@@ -56,14 +65,23 @@ export const updateBlog = async (req, res, next) => {
 }
 export const deleteBlog = async (req, res, next) => {
     try {
+        const { blogid } = req.params;
+        await Blog.findByIdAndDelete(blogid);
 
+        res.status(200).json({
+            success: true,
+            message: "Blog Deleted successfully!",
+        })
     } catch (error) {
         next(handleError(500, error.message));
     }
 }
 export const showAllBlog = async (req, res, next) => {
     try {
-
+        const blog = await Blog.find().populate('author', 'name').populate('category', 'name').sort({ createdAt: -1 }).lean().exec();
+        res.status(200).json({
+            blog
+        })
     } catch (error) {
         next(handleError(500, error.message));
     }

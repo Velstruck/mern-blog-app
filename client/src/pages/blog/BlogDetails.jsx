@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Link } from 'react-router-dom'
@@ -11,8 +11,38 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { RouteBlogAdd } from '@/helpers/RouteName'
+import { RouteBlogAdd, RouteBlogEdit } from '@/helpers/RouteName'
+import { useFetch } from '@/hooks/useFetch'
+import { getEnv } from '@/helpers/getEnv'
+import { deleteData } from '@/helpers/handleDelete'
+import { showToast } from '@/helpers/showToast'
+import Loading from '@/components/Loading'
+import { FaRegEdit } from 'react-icons/fa'
+import { RiDeleteBin6Line } from 'react-icons/ri'
+import moment from 'moment'
 const BlogDetails = () => {
+  const [refreshData, setRefreshData] = useState(false)
+
+  const { data: blogData, loading, error } = useFetch(`${getEnv('VITE_API_BASE_URL')}/blog/get-all`, {
+    method: 'GET',
+    credentials: 'include',
+  }, [refreshData])
+
+  const handleDelete = async (id) => {
+    const response =await deleteData(`${getEnv('VITE_API_BASE_URL')}/blog/delete/${id}`)
+
+    if(response){
+      setRefreshData(!refreshData)
+      showToast('success', 'Blog deleted successfully')
+    }
+    else{
+      showToast('error', 'Failed to delete Blog')
+    }
+  }
+  console.log(blogData);
+  
+
+  if (loading) return <Loading />
   return (
     <div>
       <Card>
@@ -36,18 +66,21 @@ const BlogDetails = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {/* {categoryData && categoryData.category.length > 0 ?
-                categoryData.category.map(category =>
-                  <TableRow key={category._id}>
-                    <TableCell>{category.name}</TableCell>
-                    <TableCell>{category.slug}</TableCell>
+              {blogData && blogData.blog.length > 0 ?
+                blogData.blog.map(blog =>
+                  <TableRow key={blog._id}>
+                    <TableCell>{blog?.author?.name}</TableCell>
+                    <TableCell>{blog?.category?.name}</TableCell>
+                    <TableCell>{blog?.title}</TableCell>
+                    <TableCell>{blog?.slug}</TableCell>
+                    <TableCell>{moment(blog?.createdAt).format('DD-MM-YYYY')}</TableCell>
                     <TableCell className=" flex gap-3">
                       <Button variant="outline" className="hover:bg-violet-500 hover:text-white" asChild>
-                        <Link to={RouteEditCategory(category._id)}>
+                        <Link to={RouteBlogEdit(blog._id)}>
                           <FaRegEdit />
                         </Link>
                       </Button>
-                      <Button onClick={()=>handleDelete(category._id)} variant="outline" className="hover:bg-violet-500 hover:text-white" size="icon">                       
+                      <Button onClick={()=>handleDelete(blog._id)} variant="outline" className="hover:bg-violet-500 hover:text-white" size="icon">                       
                           <RiDeleteBin6Line/>
                       </Button>
                     </TableCell>
@@ -56,11 +89,11 @@ const BlogDetails = () => {
                 :
                 <TableRow>
                   <TableCell colSpan="3">
-                    No category found
+                    No blog found
                   </TableCell>
                 </TableRow>
 
-              } */}
+              }
             </TableBody>
           </Table>
 
