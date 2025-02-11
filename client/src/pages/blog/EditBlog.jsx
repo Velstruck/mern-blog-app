@@ -24,7 +24,8 @@ import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { RouteBlog } from '@/helpers/RouteName'
 import { Edit } from 'lucide-react'
-
+import { decode } from 'entities'
+import Loading from '@/components/Loading'
 
 const EditBlog = () => {
   const { blogid } = useParams()
@@ -35,13 +36,10 @@ const EditBlog = () => {
     credentials: 'include',
   })
 
-  const {data:blogData} = useFetch(`${getEnv('VITE_API_BASE_URL')}/blog/edit/${blogid}`, {
+  const {data:blogData, loading:blogLoading} = useFetch(`${getEnv('VITE_API_BASE_URL')}/blog/edit/${blogid}`, {
     method: 'GET',
     credentials: 'include',
-  }, [blogid])
-
-  console.log(blogData);
-  
+  }, [blogid])  
 
 
   const [filePreview, setFilePreview] = useState()
@@ -65,6 +63,17 @@ const EditBlog = () => {
     },
   })
 
+  useEffect(()=>{
+    if(blogData){
+      setFilePreview(blogData.blog.featuredImage)
+      form.setValue('category', blogData.blog.category._id)
+      form.setValue('title', blogData.blog.title)
+      form.setValue('slug', blogData.blog.slug)
+      form.setValue('blogContent',decode(blogData.blog.blogContent))
+      
+    }
+  },[blogData])
+
   const handleEditorData = (event, editor) => {
     const data = editor.getData();
     form.setValue('blogContent', data);
@@ -85,18 +94,13 @@ const EditBlog = () => {
 
   async function onSubmit(values) {
 
-    try {
-      const newValue = { ...values, author: user.user._id }
-      if (!file) {
-        showToast('error', 'Please select a file')
-      }
-      
+    try {      
       const formData = new FormData()
       formData.append('file', file)
-      formData.append('data', JSON.stringify(newValue))
+      formData.append('data', JSON.stringify(values))
 
-      const response = await fetch(`${getEnv('VITE_API_BASE_URL')}/blog/add`, {
-        method: 'POST',
+      const response = await fetch(`${getEnv('VITE_API_BASE_URL')}/blog/update/${blogid}`, {
+        method: 'PUT',
         credentials: 'include',
         body: formData
       })
@@ -122,10 +126,15 @@ const EditBlog = () => {
     setFilePreview(preview)
   }
 
+  if(blogLoading){
+    return <Loading/>
+  }
+
   return (
     <div className="flex justify-center">
       <Card className="pt-5 w-full max-w-5xl">
         <CardContent>
+          <h1 className='text-2xl font-bold mb-4'>Edit Blog</h1>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className='mb-3'>
@@ -201,10 +210,12 @@ const EditBlog = () => {
                   control={form.control}
                   name="blogContent"
                   render={({ field }) => (
+                    
                     <FormItem>
+                      
                       <FormLabel>Blog Content</FormLabel>
                       <FormControl>
-                        <Editor props={{ initialData: '', onChange: handleEditorData }} />
+                        <Editor props={{ initialData: decode(field.value), onChange: handleEditorData }} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
