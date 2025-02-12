@@ -19,8 +19,17 @@ import { FiUsers } from "react-icons/fi";
 import { GrBlog } from "react-icons/gr";
 import { GoDot } from "react-icons/go";
 import { RouteBlog, RouteCategoryDetails } from '@/helpers/RouteName';
+import { useFetch } from '@/hooks/useFetch';
+import { getEnv } from '@/helpers/getEnv';
 
 const AppSidebar = () => {
+
+     const { data: categoryData } = useFetch(`${getEnv('VITE_API_BASE_URL')}/category/all-category`, {
+        method: 'GET',
+        credentials: 'include',
+      })
+
+
     return (
         <Sidebar>
             <SidebarHeader className="bg-white">
@@ -68,12 +77,16 @@ const AppSidebar = () => {
                         Categories
                     </SidebarGroupLabel>
                     <SidebarMenu>
-                        <SidebarMenuItem>
-                            <SidebarMenuButton>
-                                <GoDot />
-                                <Link to="">Category Item</Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
+                        {categoryData && categoryData.category.length > 0 ?
+                            categoryData.category.map(category =>
+                                <SidebarMenuItem key={category._id}>
+                                    <SidebarMenuButton>
+                                        <GoDot />
+                                        <Link to="">{category.name}</Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ) : null
+                        }
                     </SidebarMenu>
                 </SidebarGroup>
             </SidebarContent>
