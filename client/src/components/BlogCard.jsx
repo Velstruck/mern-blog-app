@@ -7,13 +7,13 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 import usericon from '@/assets/images/user-icon.png';
 import moment from 'moment'
 import { Link } from 'react-router-dom'
+import { RouteBlogDetails } from '@/helpers/RouteName'
 const BlogCard = ({ props }) => {
 
-    const user = useSelector(state => state.user)
     console.log(props);
 
     return (
-        <Link>
+        <Link to={RouteBlogDetails(props.category.slug, props.slug)}>
             <Card className="pt-5">
                 <CardContent>
                     <div className='flex items-center justify-between'>
