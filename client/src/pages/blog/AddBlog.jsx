@@ -115,7 +115,6 @@ const AddBlog = () => {
     <div className="flex justify-center">
       <Card className="pt-5 w-full max-w-5xl">
         <CardContent>
-        <h1 className='text-2xl font-bold mb-4'>Add Blog</h1>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className='mb-3'>

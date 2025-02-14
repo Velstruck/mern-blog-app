@@ -8,9 +8,9 @@ import UserRoute from './routes/User.route.js';
 import CategoryRoute from './routes/Category.route.js';
 import BlogRoute from './routes/Blog.route.js';
 import CommentRoute from './routes/Comment.route.js';
+import BlogLikeRoute from './routes/Bloglike.route.js';
 
 dotenv.config();
-
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -23,31 +23,27 @@ app.use(cors({
 }));
 
 // Routes setup
-app.use('/api/auth',AuthRoute)
-app.use('/api/user',UserRoute)
-app.use('/api/category',CategoryRoute)
-app.use('/api/blog',BlogRoute)
-app.use('/api/comment',CommentRoute)
+app.use('/api/auth', AuthRoute);
+app.use('/api/user', UserRoute);
+app.use('/api/category', CategoryRoute);
+app.use('/api/blog', BlogRoute);
+app.use('/api/comment', CommentRoute);
+app.use('/api/blog-like', BlogLikeRoute);
 
-
-
-
-mongoose.connect(process.env.MONGODB_CONN, {dbName:"mern-blog"})
+mongoose.connect(process.env.MONGODB_CONN, { dbName: "mern-blog" })
     .then(() => console.log('Connected to MongoDB'))
-    .catch((err) => console.log("Failed to connect to MongoDB",err))
-
+    .catch((err) => console.log("Failed to connect to MongoDB", err));
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
 
-
-app.use((err,req,res,next)=>{
+app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
-    const  message = err.message || 'Internal Server Error';
+    const message = err.message || 'Internal Server Error';
     res.status(statusCode).json({
         success: false,
         statusCode,
         message
     });
-})
+});

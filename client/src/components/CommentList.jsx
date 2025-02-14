@@ -13,7 +13,6 @@ const CommentList = ({ props }) => {
         credentials: 'include',
     })
 
-
     if (loading) return <div>Loading...</div>
     return (
         <div>
@@ -52,10 +51,10 @@ const CommentList = ({ props }) => {
 
                         <div key={comment._id} className='flex gap-2 mb-3'>
                             <Avatar>
-                                <AvatarImage src={comment?.author.avatar || usericon} />
+                                <AvatarImage src={comment?.user.avatar || usericon} />
                             </Avatar>
                             <div>
-                                <p className='font-bold'>{comment.author.name}</p>
+                                <p className='font-bold'>{comment?.user.name}</p>
                                 <p className='text-gray-500'>{moment(comment?.createdAt).format('DD-MM-YYYY')}</p>
                                 <div className='pt-3'>
                                     {comment?.comment}

@@ -9,6 +9,7 @@ import Comments from '@/components/Comments'
 import CommentList from '@/components/CommentList'
 import moment from 'moment'
 import CommentCount from '@/components/CommentCount'
+import LikeCount from '@/components/LikeCount'
 
 const SingleBlogDetails = () => {
   const { blog } = useParams()
@@ -35,6 +36,7 @@ const SingleBlogDetails = () => {
                 </div>
               </div>
               <div className='flex justify-between items-center gap-5'>
+                <LikeCount props={{blogid: data.blog._id }}/>
                 <CommentCount props={{ blogid: data.blog._id }} />
               </div>
             </div>
