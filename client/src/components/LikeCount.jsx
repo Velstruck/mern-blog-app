@@ -30,7 +30,7 @@ const LikeCount = ({ props }) => {
     const handleLike = async () => {
         try {
             if (!user.isLoggedIn) {
-                return showToast('error', 'Please login to like this blog')
+                return showToast('error', 'Login to like this post')
             }
             const response = await fetch(`${getEnv('VITE_API_BASE_URL')}/blog-like/do-like`, {
                 method: 'POST',
