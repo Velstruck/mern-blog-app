@@ -39,7 +39,7 @@ const BlogDetails = () => {
       showToast('error', 'Failed to delete Blog')
     }
   }
-  console.log(blogData);
+
   
 
   if (loading) return <Loading />

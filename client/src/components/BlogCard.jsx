@@ -10,7 +10,6 @@ import { Link } from 'react-router-dom'
 import { RouteBlogDetails } from '@/helpers/RouteName'
 const BlogCard = ({ props }) => {
 
-    console.log(props);
 
     return (
         <Link to={RouteBlogDetails(props.category.slug, props.slug)}>

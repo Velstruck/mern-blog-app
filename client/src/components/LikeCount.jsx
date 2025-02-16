@@ -15,7 +15,7 @@ const LikeCount = ({ props }) => {
         method: 'GET',
         credentials: 'include',
     })
-    console.log(blogLikeCount);
+    
 
 
 

@@ -10,13 +10,14 @@ import CommentList from '@/components/CommentList'
 import moment from 'moment'
 import CommentCount from '@/components/CommentCount'
 import LikeCount from '@/components/LikeCount'
+import RelatesBlog from '@/components/RelatesBlog'
 
 const SingleBlogDetails = () => {
-  const { blog } = useParams()
+  const { blog,category } = useParams()
   const { data, loading, error } = useFetch(`${getEnv('VITE_API_BASE_URL')}/blog/get-blog/${blog}`, {
     method: 'GET',
     credentials: 'include',
-  })
+  },[blog,category])
 
   if (loading) return <Loading />
   return (
@@ -51,7 +52,8 @@ const SingleBlogDetails = () => {
           </div>
         </>
       }
-      <div className='border rounded w-[30%]'>
+      <div className='border rounded w-[30%] p-5'>
+        <RelatesBlog props={{ category:category,currentBlog:blog }} />
       </div>
     </div>
   )
