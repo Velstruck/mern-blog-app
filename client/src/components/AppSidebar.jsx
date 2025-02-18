@@ -18,7 +18,7 @@ import { FaRegComment } from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
 import { GrBlog } from "react-icons/gr";
 import { GoDot } from "react-icons/go";
-import { RouteBlog, RouteBlogByCategory, RouteCategoryDetails } from '@/helpers/RouteName';
+import { RouteBlog, RouteBlogByCategory, RouteCategoryDetails, RouteIndex } from '@/helpers/RouteName';
 import { useFetch } from '@/hooks/useFetch';
 import { getEnv } from '@/helpers/getEnv';
 
@@ -41,7 +41,7 @@ const AppSidebar = () => {
                         <SidebarMenuItem>
                             <SidebarMenuButton>
                                 <HiOutlineHome />
-                                <Link to="">Home</Link>
+                                <Link to={RouteIndex}>Home</Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem>

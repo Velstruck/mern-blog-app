@@ -1,27 +1,23 @@
 import BlogCard from '@/components/BlogCard'
-import Loading from '@/components/Loading'
 import { getEnv } from '@/helpers/getEnv'
 import { useFetch } from '@/hooks/useFetch'
 import React from 'react'
-import { useParams } from 'react-router-dom'
-import { BiCategoryAlt } from "react-icons/bi";
+import { useSearchParams } from 'react-router-dom'
 
-
-const BlogByCategory = () => {
-    const { category } = useParams()
-
-    const { data: blogData, loading, error } = useFetch(`${getEnv('VITE_API_BASE_URL')}/blog/get-blog-by-category/${category}`, {
+const SearchResult = () => {
+    const [searchParams] = useSearchParams()
+    const q = searchParams.get('q')
+    const { data: blogData, loading, error } = useFetch(`${getEnv('VITE_API_BASE_URL')}/blog/search?q=${q}`, {
         method: 'GET',
         credentials: 'include',
-    }, [category])
-
-    if (loading) return <Loading />
+      })
+    console.log(blogData);
+    
     return (
         <>
             <div className='text-2xl font-bold mb-5 flex items-center gap-2 text-violet-500 border-b-2 pb-3'>
                 <h4>
-                    <BiCategoryAlt />
-                    {blogData && blogData.categoryData?.name}
+                    Search Result For: <span className='italic'>" {q} "</span>
                 </h4>
             </div>
             <div className='grid grid-cols-3 gap-10'>
@@ -36,4 +32,4 @@ const BlogByCategory = () => {
     )
 }
 
-export default BlogByCategory
+export default SearchResult
