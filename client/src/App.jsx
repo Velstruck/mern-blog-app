@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from './components/ui/button'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './Layout/Layout'
-import { RouteAddCategory, RouteBlog, RouteBlogAdd, RouteBlogByCategory, RouteBlogDetails, RouteBlogEdit, RouteCategoryDetails, RouteEditCategory, RouteIndex, RouteProfile, RouteSearch, RouteSignIn, RouteSignUp } from './helpers/RouteName'
+import { RouteAddCategory, RouteBlog, RouteBlogAdd, RouteBlogByCategory, RouteBlogDetails, RouteBlogEdit, RouteCategoryDetails, RouteCommentDetails, RouteEditCategory, RouteIndex, RouteProfile, RouteSearch, RouteSignIn, RouteSignUp, RouteUser } from './helpers/RouteName'
 import { Index } from './pages/Index'
 import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
@@ -16,6 +16,8 @@ import EditBlog from './pages/blog/EditBlog'
 import SingleBlogDetails from './pages/SingleBlogDetails'
 import BlogByCategory from './pages/blog/BlogByCategory'
 import SearchResult from './pages/SearchResult'
+import Comments from './pages/Comments'
+import Users from './pages/Users'
 
 const App = () => {
   return (
@@ -38,6 +40,8 @@ const App = () => {
           <Route path={RouteBlogDetails()} element={<SingleBlogDetails />} />
           <Route path={RouteBlogByCategory()} element={<BlogByCategory />} />
           <Route path={RouteSearch()} element={<SearchResult/>} />
+          <Route path={RouteCommentDetails} element={<Comments/>} />
+          <Route path={RouteUser} element={<Users/>} />
 
         </Route> 
         <Route element={<SignIn />} path={RouteSignIn} />

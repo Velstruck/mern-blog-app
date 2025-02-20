@@ -18,7 +18,7 @@ import { FaRegComment } from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
 import { GrBlog } from "react-icons/gr";
 import { GoDot } from "react-icons/go";
-import { RouteBlog, RouteBlogByCategory, RouteCategoryDetails, RouteIndex } from '@/helpers/RouteName';
+import { RouteBlog, RouteBlogByCategory, RouteCategoryDetails, RouteCommentDetails, RouteIndex, RouteUser } from '@/helpers/RouteName';
 import { useFetch } from '@/hooks/useFetch';
 import { getEnv } from '@/helpers/getEnv';
 
@@ -59,13 +59,13 @@ const AppSidebar = () => {
                         <SidebarMenuItem>
                             <SidebarMenuButton>                               
                                 <FaRegComment />
-                                <Link to="">Comments</Link>
+                                <Link to={RouteCommentDetails}>Comments</Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
                             <SidebarMenuButton>                               
                                 <FiUsers />
-                                <Link to="">Users</Link>
+                                <Link to={RouteUser}>Users</Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     </SidebarMenu>

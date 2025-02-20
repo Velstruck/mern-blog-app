@@ -19,8 +19,8 @@ const BlogByCategory = () => {
     return (
         <>
             <div className='text-2xl font-bold mb-5 flex items-center gap-2 text-violet-500 border-b-2 pb-3'>
-                <h4>
-                    <BiCategoryAlt />
+                <BiCategoryAlt />
+                <h4 className='flex gap-1'>
                     {blogData && blogData.categoryData?.name}
                 </h4>
             </div>
