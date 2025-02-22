@@ -42,6 +42,7 @@ const AddCategory = () => {
     try {
       const response = await fetch(`${getEnv('VITE_API_BASE_URL')}/category/add`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -76,7 +77,7 @@ const AddCategory = () => {
                     <FormItem>
                       <FormLabel>Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter your name" {...field} />
+                        <Input placeholder="Enter category name" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

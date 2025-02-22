@@ -59,6 +59,7 @@ const EditCategory = () => {
     try {
       const response = await fetch(`${getEnv('VITE_API_BASE_URL')}/category/update/${category_id}`, {
         method: 'PUT',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },

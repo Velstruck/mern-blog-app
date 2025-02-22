@@ -45,6 +45,7 @@ export const Login = async (req, res, next) => {
             name: user.name,
             email: user.email,
             avatar: user.avatar,
+            role: user.role
         },process.env.JWT_SECRET);
 
         // Send token in cookie
@@ -91,6 +92,7 @@ export const Login = async (req, res, next) => {
             name: user.name,
             email: user.email,
             avatar: user.avatar,
+            role: user.role
         },process.env.JWT_SECRET);
 
         // Send token in cookie
