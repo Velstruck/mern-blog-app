@@ -21,13 +21,14 @@ import { GoDot } from "react-icons/go";
 import { RouteBlog, RouteBlogByCategory, RouteCategoryDetails, RouteCommentDetails, RouteIndex, RouteUser } from '@/helpers/RouteName';
 import { useFetch } from '@/hooks/useFetch';
 import { getEnv } from '@/helpers/getEnv';
+import { useSelector } from 'react-redux';
 
 const AppSidebar = () => {
-
-     const { data: categoryData } = useFetch(`${getEnv('VITE_API_BASE_URL')}/category/all-category`, {
+    const user = useSelector(state => state.user)
+    const { data: categoryData } = useFetch(`${getEnv('VITE_API_BASE_URL')}/category/all-category`, {
         method: 'GET',
         credentials: 'include',
-      })
+    })
 
 
     return (
@@ -44,34 +45,51 @@ const AppSidebar = () => {
                                 <Link to={RouteIndex}>Home</Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
-                        <SidebarMenuItem>
-                            <SidebarMenuButton>
-                                <TbCategory2 />
-                                <Link to={RouteCategoryDetails}>Categories</Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                        <SidebarMenuItem>
-                            <SidebarMenuButton>  
-                                <GrBlog />                             
-                                <Link to={RouteBlog}>Blogs</Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                        <SidebarMenuItem>
-                            <SidebarMenuButton>                               
-                                <FaRegComment />
-                                <Link to={RouteCommentDetails}>Comments</Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                        <SidebarMenuItem>
-                            <SidebarMenuButton>                               
-                                <FiUsers />
-                                <Link to={RouteUser}>Users</Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
+
+                        {user && user.isLoggedIn
+                            ? <>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton>
+                                        <GrBlog />
+                                        <Link to={RouteBlog}>Blogs</Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton>
+                                        <FaRegComment />
+                                        <Link to={RouteCommentDetails}>Comments</Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            </>
+                            :
+                            <></>
+
+                        }
+                        {user && user.isLoggedIn && user.user.role === 'admin'
+                            ?
+                            <>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton>
+                                        <TbCategory2 />
+                                        <Link to={RouteCategoryDetails}>Categories</Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton>
+                                        <FiUsers />
+                                        <Link to={RouteUser}>Users</Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            </>
+                            :
+                            <></>
+
+                        }
                     </SidebarMenu>
                 </SidebarGroup>
 
-            {/* Categories list */}
+                {/* Categories list */}
                 <SidebarGroup>
                     <SidebarGroupLabel>
                         Categories
@@ -90,7 +108,7 @@ const AppSidebar = () => {
                     </SidebarMenu>
                 </SidebarGroup>
             </SidebarContent>
-            
+
         </Sidebar>
 
     )

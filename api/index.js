@@ -12,7 +12,7 @@ import BlogLikeRoute from './routes/Bloglike.route.js';
 
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT
 const app = express();
 
 app.use(cookieParser());
@@ -45,5 +45,5 @@ app.use((err, req, res, next) => {
         success: false,
         statusCode,
         message
-    });
-});
+    })
+})

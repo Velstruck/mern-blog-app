@@ -35,7 +35,7 @@ const Comments = () => {
 
     if(response){
       setRefreshData(!refreshData)
-      showToast('success', 'Category deleted successfully')
+      showToast('success', 'Comment deleted successfully')
     }
     else{
       showToast('error', 'Failed to delete comment')
