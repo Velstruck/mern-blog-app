@@ -34,13 +34,13 @@ const AppSidebar = () => {
     return (
         <Sidebar>
             <SidebarHeader className="bg-white">
-                <img src={logo} width={120} />
+                <img src={logo} className='w-24' />
             </SidebarHeader>
             <SidebarContent className="bg-white">
                 <SidebarGroup>
                     <SidebarMenu>
                         <SidebarMenuItem>
-                            <SidebarMenuButton>
+                            <SidebarMenuButton className='mt-3'>
                                 <HiOutlineHome />
                                 <Link to={RouteIndex}>Home</Link>
                             </SidebarMenuButton>

@@ -64,7 +64,7 @@ const SignIn = () => {
             <Card className='w-[400px] p-5'>
                 <div className='flex justify-center items-center mb-2'>
                     <Link to={RouteIndex}>
-                        <img src={logo}  />
+                        <img src={logo} className='w-24' />
                     </Link>
                 </div>
                 <h1 className='text-2xl font-bold mb-5 text-center' >Sign into your Account</h1>

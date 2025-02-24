@@ -65,7 +65,7 @@ const Topbar = () => {
           <IoMdMenu size={20}/>
         </button>
         <Link to={RouteIndex}>
-          <img src={logo} className='md:w-auto w-48' />
+          <img src={logo} className='md:w-20 w-52' />
         </Link>
       </div>
       <div className='w-[500px]'>
