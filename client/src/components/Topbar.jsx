@@ -23,6 +23,8 @@ import { removeUser } from '@/redux/user/user.slice';
 import { showToast } from '@/helpers/showToast';
 import { getEnv } from '@/helpers/getEnv';
 import { IoSearch } from "react-icons/io5";
+import { IoMdMenu } from "react-icons/io";
+import { useSidebar } from './ui/sidebar';
 
 
 
@@ -31,6 +33,7 @@ const Topbar = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [showSearch, setShowSearch] = useState(false)
+  const {toggleSidebar} = useSidebar()
 
   const handleLogout = async () => {
     try {
@@ -57,9 +60,12 @@ const Topbar = () => {
   }
   return (
     <div className='flex justify-between items-center h-16 fixed w-full z-20 bg-white px-2.5 border-b'>
-      <div>
+      <div className='flex justify-center items-center gap-2'>
+        <button type='button' onClick={toggleSidebar} className='md:hidden'>
+          <IoMdMenu size={20}/>
+        </button>
         <Link to={RouteIndex}>
-          <img src={logo} className='md:w-auto w-44' />
+          <img src={logo} className='md:w-auto w-48' />
         </Link>
       </div>
       <div className='w-[500px]'>
