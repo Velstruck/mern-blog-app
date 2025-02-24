@@ -4,7 +4,7 @@ import { Button } from './ui/button'
 import { Link, Navigate, Route, useNavigate } from 'react-router-dom'
 import { FiLogIn } from "react-icons/fi";
 import SearchBox from './SearchBox';
-import { RouteIndex, RouteProfile, RouteSignIn } from '@/helpers/RouteName';
+import { RouteBlogAdd, RouteIndex, RouteProfile, RouteSignIn } from '@/helpers/RouteName';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   DropdownMenu,
@@ -52,7 +52,9 @@ const Topbar = () => {
   return (
     <div className='flex justify-between items-center h-16 fixed w-full z-20 bg-white px-2.5 border-b'>
       <div>
-        <img src={logo} />
+        <Link to={RouteIndex}>
+          <img src={logo} />
+        </Link>
       </div>
       <div className='w-[500px]'>
         <SearchBox />
@@ -87,7 +89,7 @@ const Topbar = () => {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild className="cursor-pointer">
-                <Link to="">
+                <Link to={RouteBlogAdd}>
                   <FaPlus />
                   Create Post
                 </Link>

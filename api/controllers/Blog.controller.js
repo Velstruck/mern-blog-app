@@ -112,7 +112,14 @@ export const deleteBlog = async (req, res, next) => {
 }
 export const showAllBlog = async (req, res, next) => {
     try {
-        const blog = await Blog.find().populate('author', 'name avatar role').populate('category', 'name slug').sort({ createdAt: -1 }).lean().exec();
+        const user = req.user;
+        let blog;
+        if(user.role === 'admin'){
+            blog = await Blog.find().populate('author', 'name avatar role').populate('category', 'name slug').sort({ createdAt: -1 }).lean().exec();
+        }
+        else{
+            blog = await Blog.find({author:user._id}).populate('author', 'name avatar role').populate('category', 'name slug').sort({ createdAt: -1 }).lean().exec();
+        }
         res.status(200).json({
             blog
         })
@@ -180,6 +187,17 @@ export const search = async (req,res,next) => {
     }
 }
 
+export const getAllBlogs = async (req, res, next) => {
+    try {
+        const user = req.user;
+        const blog = await Blog.find().populate('author', 'name avatar role').populate('category', 'name slug').sort({ createdAt: -1 }).lean().exec();
+        res.status(200).json({
+            blog
+        })
+    } catch (error) {
+        next(handleError(500, error.message));
+    }
+}
 
 
 
