@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/select"
 import { useFetch } from '@/hooks/useFetch'
 import Dropzone from 'react-dropzone'
-import { useState } from 'react'
 import Editor from '@/components/Editor'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
