@@ -25,8 +25,7 @@ import { getEnv } from '@/helpers/getEnv';
 import { IoSearch } from "react-icons/io5";
 import { IoMdMenu } from "react-icons/io";
 import { useSidebar } from './ui/sidebar';
-
-
+import { ThemeToggle } from './ThemeToggle';
 
 const Topbar = () => {
   const user = useSelector(state => state.user)
@@ -59,68 +58,75 @@ const Topbar = () => {
     setShowSearch(!showSearch)
   }
   return (
-    <div className='flex justify-between items-center h-16 fixed w-full z-20 bg-white px-2.5 border-b'>
-      <div className='flex justify-center items-center gap-2'>
-        <button type='button' onClick={toggleSidebar} className='md:hidden'>
-          <IoMdMenu size={20}/>
-        </button>
-        <Link to={RouteIndex}>
-          <img src={logo} className='md:w-20 w-52' />
-        </Link>
-      </div>
-      <div className='w-[500px]'>
-        <div className={`md:relative md:block absolute bg-white left-0 w-full md:top-0 top-16 md:p-0 p-5 ${showSearch ? 'block' : 'hidden'}`}>
-          <SearchBox />
+    <>
+      <div className='h-[70px] fixed top-0 w-full z-50 px-10 flex items-center justify-between bg-background border-b border-border'>
+        <div className='flex items-center gap-5'>
+          <Button variant="ghost" size="icon" onClick={toggleSidebar} className='md:hidden block'>
+            <IoMdMenu className='text-xl text-foreground' />
+          </Button>
+          <div className='w-24'>
+            <Link to={RouteIndex}>
+              <img src={logo} alt="Logo" />
+            </Link>
+          </div>
+        </div>
+        <div className='w-[500px]'>
+          <div className={`md:relative md:block absolute bg-background left-0 w-full md:top-0 top-16 md:p-0 p-5 ${showSearch ? 'block' : 'hidden'}`}>
+            <SearchBox />
+          </div>
+        </div>
+        <div className='flex items-center gap-5'>
+          <div className='flex items-center gap-2'>
+            <ThemeToggle />
+            {!showSearch && <Button variant="ghost" size="icon" onClick={() => setShowSearch(true)} className="md:hidden">
+              <IoSearch className='text-xl text-foreground' />
+            </Button>}
+          </div>
+          {!user.isLoggedIn ?
+            <Button className='rounded-full' asChild>
+              <Link to={RouteSignIn}>
+                <FiLogIn />
+                Sign In
+              </Link>
+            </Button>
+            :
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Avatar>
+                  <AvatarImage src={user.user.avatar || usericon} />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>
+                  <p>{user.user.name}</p>
+                  <p className='text-sm text-gray-500'>{user.user.email}</p>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link to={RouteProfile}>
+                    <FiUser />
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link to={RouteBlogAdd}>
+                    <FaPlus />
+                    Create Post
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>
+                    < FiLogOut color='red' />
+                    Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          }
         </div>
       </div>
-      <div className='flex items-center gap-5'>
-        <button onClick={toggleSearch} type='button' className='md:hidden block'>
-          <IoSearch  size={25}/>
-        </button>
-        {!user.isLoggedIn ?
-          <Button className='rounded-full' asChild>
-            <Link to={RouteSignIn}>
-              <FiLogIn />
-              Sign In
-            </Link>
-          </Button>
-          :
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Avatar>
-                <AvatarImage src={user.user.avatar || usericon} />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>
-                <p>{user.user.name}</p>
-                <p className='text-sm text-gray-500'>{user.user.email}</p>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild className="cursor-pointer">
-                <Link to={RouteProfile}>
-                  <FiUser />
-                  Profile
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild className="cursor-pointer">
-                <Link to={RouteBlogAdd}>
-                  <FaPlus />
-                  Create Post
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout}>
-                  < FiLogOut color='red' />
-                  Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        }
-      </div>
-    </div>
+    </>
   )
 }
 

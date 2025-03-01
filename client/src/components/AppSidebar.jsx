@@ -9,8 +9,9 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    useSidebar
 } from "@/components/ui/sidebar"
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import logo from '@/assets/images/logo-white.png'
 import { HiOutlineHome } from "react-icons/hi2";
 import { TbCategory2 } from "react-icons/tb";
@@ -22,6 +23,7 @@ import { RouteBlog, RouteBlogByCategory, RouteCategoryDetails, RouteCommentDetai
 import { useFetch } from '@/hooks/useFetch';
 import { getEnv } from '@/helpers/getEnv';
 import { useSelector } from 'react-redux';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const AppSidebar = () => {
     const user = useSelector(state => state.user)
@@ -29,88 +31,100 @@ const AppSidebar = () => {
         method: 'GET',
         credentials: 'include',
     })
+    const navigate = useNavigate();
+    const isMobile = useIsMobile();
+    const { setOpenMobile } = useSidebar();
 
+    const handleNavigation = (path) => {
+        navigate(path);
+        if (isMobile) {
+            setOpenMobile(false);
+        }
+    };
 
     return (
         <Sidebar>
-            <SidebarHeader className="bg-white">
-                <img src={logo} className='w-24' />
+            <SidebarHeader className="bg-background border-r border-border">
+                <img src={logo} className='w-24' alt="Logo" />
             </SidebarHeader>
-            <SidebarContent className="bg-white">
+            <SidebarContent className="bg-background border-r border-border">
                 <SidebarGroup>
                     <SidebarMenu>
                         <SidebarMenuItem>
-                            <SidebarMenuButton className='mt-3'>
-                                <HiOutlineHome />
-                                <Link to={RouteIndex}>Home</Link>
+                            <SidebarMenuButton 
+                                className='mt-4'
+                                onClick={() => handleNavigation(RouteIndex)}
+                            >
+                                <HiOutlineHome className="dark:text-foreground" />
+                                <span className="dark:text-foreground">Home</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
 
-                        {user && user.isLoggedIn
-                            ? <>
-                                <SidebarMenuItem>
-                                    <SidebarMenuButton>
-                                        <GrBlog />
-                                        <Link to={RouteBlog}>Blogs</Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                                <SidebarMenuItem>
-                                    <SidebarMenuButton>
-                                        <FaRegComment />
-                                        <Link to={RouteCommentDetails}>Comments</Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            </>
-                            :
-                            <></>
-
-                        }
-                        {user && user.isLoggedIn && user.user.role === 'admin'
-                            ?
+                        {user && user.isLoggedIn && (
                             <>
                                 <SidebarMenuItem>
-                                    <SidebarMenuButton>
-                                        <TbCategory2 />
-                                        <Link to={RouteCategoryDetails}>Categories</Link>
+                                    <SidebarMenuButton
+                                        onClick={() => handleNavigation(RouteBlog)}
+                                    >
+                                        <GrBlog className="dark:text-foreground" />
+                                        <span className="dark:text-foreground">Blogs</span>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
-
                                 <SidebarMenuItem>
-                                    <SidebarMenuButton>
-                                        <FiUsers />
-                                        <Link to={RouteUser}>Users</Link>
+                                    <SidebarMenuButton
+                                        onClick={() => handleNavigation(RouteCommentDetails)}
+                                    >
+                                        <FaRegComment className="dark:text-foreground" />
+                                        <span className="dark:text-foreground">Comments</span>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             </>
-                            :
-                            <></>
+                        )}
 
-                        }
+                        {user && user.isLoggedIn && user.user.role === 'admin' && (
+                            <>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton
+                                        onClick={() => handleNavigation(RouteCategoryDetails)}
+                                    >
+                                        <TbCategory2 className="dark:text-foreground" />
+                                        <span className="dark:text-foreground">Categories</span>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton
+                                        onClick={() => handleNavigation(RouteUser)}
+                                    >
+                                        <FiUsers className="dark:text-foreground" />
+                                        <span className="dark:text-foreground">Users</span>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            </>
+                        )}
                     </SidebarMenu>
                 </SidebarGroup>
 
                 {/* Categories list */}
                 <SidebarGroup>
                     <SidebarGroupLabel>
-                        Categories
+                        <span className="dark:text-foreground">Categories</span>
                     </SidebarGroupLabel>
                     <SidebarMenu>
                         {categoryData && categoryData.category.length > 0 ?
-                            categoryData.category.map(category =>
+                            categoryData.category.map((category) => (
                                 <SidebarMenuItem key={category._id}>
-                                    <SidebarMenuButton>
-                                        <GoDot />
-                                        <Link to={RouteBlogByCategory(category.slug)}>{category.name}</Link>
+                                    <SidebarMenuButton
+                                        onClick={() => handleNavigation(RouteBlogByCategory(category.slug))}
+                                    >
+                                        <GoDot className="dark:text-foreground" />
+                                        <span className="dark:text-foreground">{category.name}</span>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
-                            ) : null
-                        }
+                            )) : null}
                     </SidebarMenu>
                 </SidebarGroup>
             </SidebarContent>
-
         </Sidebar>
-
     )
 }
 
