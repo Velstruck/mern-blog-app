@@ -9,10 +9,13 @@ import { Button } from '@/components/ui/button'
 import slugify from 'slugify'
 import { showToast } from '@/helpers/showToast'
 import { getEnv } from '@/helpers/getEnv'
+import { useNavigate } from 'react-router-dom'
+import { RouteCategoryDetails } from '@/helpers/RouteName'
 
 
 
 const AddCategory = () => {
+  const navigate = useNavigate()
 
   const formSchema = z.object({
     name: z.string().min(3, 'Name must be at least 3 characters long'),
@@ -54,6 +57,7 @@ const AddCategory = () => {
         return showToast('error', data.message)
       }
       form.reset();
+      navigate(RouteCategoryDetails);
       showToast('success', data.message)
     }
     catch (err) {

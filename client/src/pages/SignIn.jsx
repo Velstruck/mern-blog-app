@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import React from 'react'
+import { LoadingButton } from '@/components/ui/loading-button'
+import React, { useState } from 'react'
 import { z } from 'zod'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from 'react-hook-form'
@@ -21,6 +22,7 @@ const SignIn = () => {
 
     const dispatch = useDispatch()
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false)
 
     const formSchema = z.object({
         email: z.string().email(),
@@ -37,6 +39,7 @@ const SignIn = () => {
 
     async function onSubmit(values) {
         try {
+            setIsLoading(true)
             const response = await fetch(`${getEnv('VITE_API_BASE_URL')}/auth/login`, {
                 method: 'POST',
                 headers: {
@@ -57,6 +60,9 @@ const SignIn = () => {
         catch (err) {
             showToast('error', err.message)
         }
+        finally {
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -71,7 +77,7 @@ const SignIn = () => {
                 <div>
                     <GoogleLogin />
                     <div className='border-2 my-5 flex justify-center items-center border-gray-400 relative'>
-                        <span className='absolute bg-white text-sm p-1'>
+                        <span className='absolute bg-background text-sm p-1'>
                             or
                         </span>
                     </div>
@@ -109,7 +115,9 @@ const SignIn = () => {
                             />
                         </div>
                         <div mt-5>
-                            <Button type="submit" className="w-full">Sign In</Button>
+                            <LoadingButton type="submit" className="w-full" loading={isLoading}>
+                                Sign In
+                            </LoadingButton>
                             <div className='mt-5 text-sm flex justify-center gap-2'>
                                 <p>Don't have an account?</p>
                                 <Link to={RouteSignUp} className='text-blue-500 hover:underline'>Sign Up</Link>

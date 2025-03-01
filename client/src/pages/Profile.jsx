@@ -16,9 +16,12 @@ import Loading from '@/components/Loading'
 import { CiCamera } from "react-icons/ci";
 import Dropzone from 'react-dropzone'
 import { setUser } from '@/redux/user/user.slice'
+import { useNavigate } from 'react-router-dom'
+import { RouteIndex } from '@/helpers/RouteName'
 
 
 const Profile = () => {
+    const navigate = useNavigate();
     const user = useSelector(state => state.user)
     const [filePreview, setFilePreview] = useState()
     const [file, setFile] = useState()
@@ -29,18 +32,15 @@ const Profile = () => {
         }
     )
 
-
-
     const dispatch = useDispatch()
-
 
     const formSchema = z.object({
         name: z.string().min(3, 'Name must be at least 3 characters long'),
         email: z.string().email(),
-        bio: z.string().min(3, 'Bio must be at least 3 characters long'),
-        
+        bio: z.string(),
     })
 
+    // Changed validation for bio
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -78,6 +78,7 @@ const Profile = () => {
                 return showToast('error', data.message)
             }
             dispatch(setUser(data.user))
+            navigate(RouteIndex)
             showToast('success', data.message)
         }
         catch (error) {

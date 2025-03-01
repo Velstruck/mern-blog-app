@@ -92,7 +92,7 @@ const Topbar = () => {
             :
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <Avatar>
+                <Avatar className='hover:scale-105 transition-all duration-300'>
                   <AvatarImage src={user.user.avatar || usericon} />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>

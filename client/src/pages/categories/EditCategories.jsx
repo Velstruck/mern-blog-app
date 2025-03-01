@@ -9,13 +9,14 @@ import { Button } from '@/components/ui/button'
 import slugify from 'slugify'
 import { showToast } from '@/helpers/showToast'
 import { getEnv } from '@/helpers/getEnv'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useFetch } from '@/hooks/useFetch'
+import { RouteCategoryDetails } from '@/helpers/RouteName'
 
 
 
 const EditCategory = () => {
-
+  const navigate = useNavigate()
   const { category_id } = useParams()
   const { data: categoryData, loading, error } = useFetch(`${getEnv('VITE_API_BASE_URL')}/category/show/${category_id}`, 
   { 
@@ -70,7 +71,7 @@ const EditCategory = () => {
         //toastify
         return showToast('error', data.message)
       }
-      
+      navigate(RouteCategoryDetails)
       showToast('success', data.message)
     }
     catch (err) {

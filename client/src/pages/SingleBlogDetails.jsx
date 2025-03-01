@@ -33,7 +33,7 @@ const SingleBlogDetails = () => {
                 </Avatar>
                 <div>
                   <p>{data.blog.author.name}</p>
-                  <p className='text-gray-600'><span className='text-black'>Date:</span> {moment(data.blog.createdAt).format('dddd DD[th] MMMM YYYY')}</p>
+                  <p className='text-gray-500'><span>Date:</span> {moment(data.blog.createdAt).format('dddd DD[th] MMMM YYYY')}</p>
                 </div>
               </div>
               <div className='flex justify-between items-center gap-5'>

@@ -1,11 +1,11 @@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { z } from 'zod'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from 'react-hook-form'
 import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { LoadingButton } from '@/components/ui/loading-button'
 import slugify from 'slugify'
 import { showToast } from '@/helpers/showToast'
 import { getEnv } from '@/helpers/getEnv'
@@ -28,6 +28,7 @@ import { RouteBlog } from '@/helpers/RouteName'
 const AddBlog = () => {
   const navigate = useNavigate();
   const user = useSelector(state => state.user)
+  const [isLoading, setIsLoading] = useState(false)
   const { data: categoryData, loading, error } = useFetch(`${getEnv('VITE_API_BASE_URL')}/category/all-category`, {
     method: 'GET',
     credentials: 'include',
@@ -73,11 +74,12 @@ const AddBlog = () => {
   }, [blogTitle])
 
   async function onSubmit(values) {
-
     try {
+      setIsLoading(true)
       const newValue = { ...values, author: user.user._id }
       if (!file) {
         showToast('error', 'Please select a file')
+        return
       }
       
       const formData = new FormData()
@@ -101,6 +103,9 @@ const AddBlog = () => {
     }
     catch (error) {
       showToast('error', error.message)
+    }
+    finally {
+      setIsLoading(false)
     }
 
   }
@@ -204,7 +209,9 @@ const AddBlog = () => {
               </div>
 
               <div className='mt-5'>
-                <Button type="submit" className="w-full">Submit</Button>
+                <LoadingButton type="submit" className="w-full" loading={isLoading}>
+                  Add Blog
+                </LoadingButton>
               </div>
             </form>
           </Form>

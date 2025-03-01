@@ -54,7 +54,7 @@ const Comments = ({ props }) => {
     }
     return (
         <div>
-            <h4 className='flex items-center gap-2 text-2xl font-bold'>
+            <h4 className='flex items-center gap-2 text-2xl font-bold mb-3'>
                 <FaRegComments className='text-violet-500' />Comments</h4>
             {user && user.isLoggedIn
                 ?
@@ -66,7 +66,6 @@ const Comments = ({ props }) => {
                                 name="comment"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Comment</FormLabel>
                                         <FormControl>
                                             <Textarea placeholder='Type your comment' {...field} />
                                         </FormControl>

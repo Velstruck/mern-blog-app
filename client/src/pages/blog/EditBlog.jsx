@@ -1,11 +1,11 @@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { z } from 'zod'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from 'react-hook-form'
 import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { LoadingButton } from '@/components/ui/loading-button'
 import slugify from 'slugify'
 import { showToast } from '@/helpers/showToast'
 import { getEnv } from '@/helpers/getEnv'
@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/select"
 import { useFetch } from '@/hooks/useFetch'
 import Dropzone from 'react-dropzone'
-import { useState } from 'react'
 import Editor from '@/components/Editor'
 import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -31,6 +30,7 @@ const EditBlog = () => {
   const { blogid } = useParams()
   const navigate = useNavigate();
   const user = useSelector(state => state.user)
+  const [isLoading, setIsLoading] = useState(false)
   const { data: categoryData } = useFetch(`${getEnv('VITE_API_BASE_URL')}/category/all-category`, {
     method: 'GET',
     credentials: 'include',
@@ -93,8 +93,8 @@ const EditBlog = () => {
   }, [blogTitle])
 
   async function onSubmit(values) {
-
-    try {      
+    try {
+      setIsLoading(true)
       const formData = new FormData()
       formData.append('file', file)
       formData.append('data', JSON.stringify(values))
@@ -117,7 +117,9 @@ const EditBlog = () => {
     catch (error) {
       showToast('error', error.message)
     }
-
+    finally {
+      setIsLoading(false)
+    }
   }
   const handleFileSelection = (files) => {
     const file = files[0]
@@ -226,7 +228,9 @@ const EditBlog = () => {
               </div>
 
               <div className='mt-5'>
-                <Button type="submit" className="w-full">Submit</Button>
+                <LoadingButton type="submit" className="w-full" loading={isLoading}>
+                  Update Blog
+                </LoadingButton>
               </div>
             </form>
           </Form>

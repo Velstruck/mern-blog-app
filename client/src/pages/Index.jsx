@@ -1,5 +1,5 @@
 import BlogCard from '@/components/BlogCard'
-import Loading from '@/components/Loading'
+import BlogCardSkeleton from '@/components/BlogCardSkeleton'
 import { getEnv } from '@/helpers/getEnv'
 import { useFetch } from '@/hooks/useFetch'
 import React from 'react'
@@ -9,15 +9,19 @@ export const Index = () => {
     method: 'GET',
     credentials: 'include',
   })
-  if (loading) return <Loading />
+
   return (
     <div className='grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-10'>
-      {blogData && blogData.blog.length > 0
-        ?
+      {loading ? (
+        // Show 6 skeleton cards while loading
+        [...Array(6)].map((_, index) => (
+          <BlogCardSkeleton key={index} />
+        ))
+      ) : blogData && blogData.blog.length > 0 ? (
         blogData.blog.map(blog => <BlogCard key={blog._id} props={blog}/>)
-        :
-        <div>Data not found..</div>
-      }
+      ) : (
+        <div className="col-span-full text-center text-gray-500">No blog posts found</div>
+      )}
     </div>
   )
 }

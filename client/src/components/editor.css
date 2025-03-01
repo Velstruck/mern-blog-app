@@ -1,0 +1,90 @@
+/* Light mode styles */
+.ck.ck-editor__main>.ck-editor__editable {
+  background: white;
+  color: black;
+}
+
+/* Dark mode styles */
+[data-theme="dark"] .ck.ck-editor__main>.ck-editor__editable {
+  background: #1a1a1a;
+  color: white;
+}
+
+[data-theme="dark"] .ck.ck-editor__main>.ck-editor__editable.ck-focused {
+  border-color: #6d28d9;
+}
+
+[data-theme="dark"] .ck.ck-toolbar {
+  background: #262626;
+  border-color: #404040;
+}
+
+[data-theme="dark"] .ck.ck-toolbar .ck-toolbar__items .ck-button {
+  color: #e5e5e5;
+}
+
+[data-theme="dark"] .ck.ck-toolbar .ck-toolbar__items .ck-button:hover {
+  background: #404040;
+}
+
+[data-theme="dark"] .ck.ck-toolbar .ck-toolbar__items .ck-button.ck-on {
+  background: #4c1d95;
+  color: white;
+}
+
+[data-theme="dark"] .ck.ck-list {
+  background: #262626;
+}
+
+[data-theme="dark"] .ck.ck-list .ck-list__item .ck-button {
+  color: #e5e5e5;
+}
+
+[data-theme="dark"] .ck.ck-list .ck-list__item .ck-button:hover:not(.ck-disabled) {
+  background: #404040;
+}
+
+[data-theme="dark"] .ck.ck-list .ck-list__item .ck-button.ck-on {
+  background: #4c1d95;
+  color: white;
+}
+
+[data-theme="dark"] .ck.ck-dropdown .ck-dropdown__panel {
+  background: #262626;
+  border-color: #404040;
+}
+
+[data-theme="dark"] .ck.ck-input {
+  background: #1a1a1a;
+  border-color: #404040;
+  color: white;
+}
+
+[data-theme="dark"] .ck.ck-input:focus {
+  border-color: #6d28d9;
+}
+
+/* Table styles for dark mode */
+[data-theme="dark"] .ck-content table {
+  border-color: #404040;
+}
+
+[data-theme="dark"] .ck-content table td,
+[data-theme="dark"] .ck-content table th {
+  border-color: #404040;
+  background: #262626;
+  color: white;
+}
+
+/* Code block styles for dark mode */
+[data-theme="dark"] .ck-content pre {
+  background: #262626;
+  color: #e5e5e5;
+  border-color: #404040;
+}
+
+/* Quote block styles for dark mode */
+[data-theme="dark"] .ck-content blockquote {
+  border-left-color: #6d28d9;
+  color: #e5e5e5;
+}
